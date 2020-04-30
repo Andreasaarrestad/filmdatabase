@@ -1,0 +1,115 @@
+create database FilmDB;
+use FilmDB;
+create table Sjanger (
+	SjangerID 		integer AUTO_INCREMENT,
+	SjangerNavn 	varchar(30) not null,
+	constraint sjangerID_pk primary key (SjangerID) );
+	
+create table Selskap (
+	SelskapID		integer AUTO_INCREMENT,
+    Navn			varchar(30),
+	URL 			varchar(100),
+	Adresse 		varchar(30) ,
+	Land 			varchar(30),
+	constraint selskapID_pk primary key (SelskapID) );
+
+create table Filmperson (
+     PersonID 		integer AUTO_INCREMENT,
+     Navn			varchar(100),
+     Fødselsår		integer,
+     constraint personID_pk primary key (PersonID) );
+     
+create table EpisodeOrFilm (
+	FilmID 			integer AUTO_INCREMENT,
+	Tittel			varchar(100),
+	Lengde			integer,
+	Utgivelsesår	integer,
+    Lanseringsdato	varchar(30),
+	Beskrivelse		varchar(1000),
+    UtgittPåVideo	boolean,
+    LagetFor		varchar(100),
+	constraint filmID_pk primary key (FilmID));
+	
+create table Bruker (
+	BrukerID 		integer AUTO_INCREMENT,
+	Brukernavn 		varchar(100),
+	constraint brukerID_pk primary key (BrukerID));
+
+create table Serie (
+	SerieID 		integer AUTO_INCREMENT,
+	Seriebeskrivelse varchar(1000),
+	constraint serieID_pk primary key (SerieID));
+    
+create table Sesong (
+	SerieID 		integer,
+    FilmID			integer,
+	constraint sesong_pk primary key (SerieID, FilmID),
+    constraint serieID_fk1 foreign key (SerieID) references Serie(SerieID),
+    constraint filmID_fk1 foreign key (FilmID) references EpisodeOrFilm(FilmID));
+    
+create table AnmeldelseForSerie (
+	SerieID 		integer,
+	BrukerID		integer,
+	Kommentar		varchar(1000),
+	Rating			integer,
+	constraint anmeldelseForSerie_pk primary key (SerieID, BrukerID),
+    constraint serieID_fk2 foreign key (SerieID) references Serie(SerieID),
+    constraint brukerID_fk1 foreign key (BrukerID) references Bruker(BrukerID));
+
+create table AnmeldelseForFilm (
+	BrukerID 		integer,
+	FilmID			integer,
+	Kommentar		varchar(1000),
+	Rating			integer,
+	constraint anmeldelseForFilm_pk primary key (BrukerID, FilmID),
+    constraint brukerID_fk2 foreign key (BrukerID) references Bruker(BrukerID),
+    constraint filmID_fk2 foreign key (FilmID) references episodeorfilm(FilmID));
+
+create table Filmutgiver (
+	SelskapID 		integer,
+	FilmID			integer,
+	constraint filmutgiver_pk primary key (SelskapID, FilmID),
+    constraint selskapID_fk1 foreign key (SelskapID) references Selskap(SelskapID),
+    constraint filmID_fk3 foreign key (FilmID) references EpisodeOrFilm(FilmID));
+
+create table SjangerForFilm (
+	SjangerID 		integer,
+    FilmID			integer,
+	constraint sjangerForFilm_pk primary key (SjangerID, FilmID),
+    constraint filmID_fk4 foreign key (FilmID) references EpisodeOrFilm(FilmID));
+    
+create table RegissørIFilm (
+	PersonID 		integer,
+    FilmID			integer,
+	constraint regissørIFilm_pk primary key (PersonID, FilmID),
+    constraint personID_fk1 foreign key (PersonID) references Filmperson(PersonID),
+    constraint filmID_fk5 foreign key (FilmID) references EpisodeOrFilm(FilmID));
+
+create table SkuespillerIFilm (
+	PersonID 		integer,
+    FilmID			integer,
+    Rolle			varchar(30),
+	constraint skuespillerIFilm_pk primary key (PersonID, FilmID),
+    constraint personID_fk2 foreign key (PersonID) references Filmperson(PersonID),
+    constraint filmID_fk6 foreign key (FilmID) references EpisodeOrFilm(FilmID));
+    
+create table ManusforfatterIFilm (
+	PersonID 		integer,
+    FilmID			integer,
+	constraint manusforfatterIFilm_pk primary key (PersonID, FilmID),
+    constraint personID_fk3 foreign key (PersonID) references Filmperson(PersonID),
+    constraint filmID_fk7 foreign key (FilmID) references EpisodeOrFilm(FilmID));
+    
+create table MusikerIFilm (
+	PersonID 		integer,
+    FilmID			integer,
+	constraint musikerIFilm_pk primary key (PersonID, FilmID),
+    constraint personID_fk4 foreign key (PersonID) references Filmperson(PersonID),
+    constraint filmID_fk8 foreign key (FilmID) references EpisodeOrFilm(FilmID));
+    
+create table KomponistIFilm (
+	PersonID 		integer,
+    FilmID			integer,
+	constraint komponistIFilm_pk primary key (PersonID, FilmID),
+    constraint personID_fk5 foreign key (PersonID) references Filmperson(PersonID),
+    constraint filmID_fk9 foreign key (FilmID) references EpisodeOrFilm(FilmID));
